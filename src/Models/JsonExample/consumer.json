@@ -1,0 +1,8 @@
+{
+  "username": "my-username",
+  "custom_id": "my-custom-id",
+  "tags": [
+    "user-level",
+    "low-priority"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "httpbin",
+  "hosts": [
+    "example.com"
+  ],
+  "protocols": [
+    "http",
+    "https"
+  ],
+  "methods": [
+    "GET",
+    "POST"
+  ],
+  "paths": [
+    "/"
+  ],
+  "headers": {
+    "x-some-header": [
+      "foo",
+      "bar"
+    ]
+  },
+  "path_handling": "v1",
+  "strip_path": true,
+  "preserve_host": true,
+  "https_redirect_status_code": 426,
+  "regex_priority": 0,
+  "snis": [
+    "tcp",
+    "tls"
+  ],
+  "sources": null,
+  "destinations": null,
+  "service": {
+    "id": "f8cf98a7-264e-4e9b-bb7c-cd8dc2fa71e9"
+  },
+  "tags": [
+    "httpbin"
+  ]
+}

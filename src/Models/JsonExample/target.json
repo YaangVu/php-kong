@@ -1,0 +1,14 @@
+{
+  "id": "173a6cee-90d1-40a7-89cf-0329eca780a6",
+  "created_at": 1422386534,
+  "upstream": {
+    "id": "bdab0e47-4e37-4f0b-8fd0-87d95cc4addc"
+  },
+  "target": "example.com:8000",
+  "weight": 100,
+  "tags": [
+    "user-level",
+    "low-priority"
+  ]
+}
+
