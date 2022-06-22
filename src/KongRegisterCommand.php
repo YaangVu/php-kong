@@ -7,26 +7,27 @@
 namespace Yaangvu\LaravelKong;
 
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Console\Command;
 use Yaangvu\LaravelKong\Models\Route;
 use Yaangvu\LaravelKong\Models\Service;
 use Yaangvu\LaravelKong\Models\Target;
 use Yaangvu\LaravelKong\Models\Upstream;
 
-class KongRegisterCommand
+class KongRegisterCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected string $signature = 'kong:register';
+    protected $signature = 'kong:register';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected string $description = 'Register Service, Upstream, Target to KongEntity Service';
+    protected $description = 'Register Service, Upstream, Target to KongEntity Service';
 
 
     /**
@@ -34,10 +35,13 @@ class KongRegisterCommand
      */
     public function handle(Kong $kong): void
     {
+        //Register Upstream and Target
         $upstream = $this->_registerUpstream($kong);
-        $target   = $this->_registerTarget($kong, $upstream);
-        $service  = $this->_registerService($kong);
-        $route    = $this->_registerRoute($kong, $service);
+        $this->_registerTarget($kong, $upstream);
+
+        //Register Service and Route
+        $service = $this->_registerService($kong);
+        $this->_registerRoute($kong, $service);
     }
 
     /**
@@ -68,16 +72,19 @@ class KongRegisterCommand
      * @param Kong     $kong
      * @param Upstream $upstream
      *
-     * @return Target
+     * @return void
      * @throws GuzzleException
      */
-    private function _registerTarget(Kong $kong, Upstream $upstream): Target
+    private function _registerTarget(Kong $kong, Upstream $upstream): void
     {
-        $target = new Target();
-        $target->setTarget(config('kong.kong_targets'));
-        $target->setUpstream($upstream);
+        $targets = config('kong.kong_targets');
+        foreach ($targets as $targetString) {
+            $target = new Target();
+            $target->setTarget($targetString);
+            $target->setUpstream($upstream);
 
-        return $kong->createOrUpdateTarget($target);
+            $kong->createOrUpdateTarget($target);
+        }
     }
 
     /**
@@ -109,16 +116,16 @@ class KongRegisterCommand
      * @param Kong    $kong
      * @param Service $service
      *
-     * @return Route
+     * @return void
      * @throws GuzzleException
      */
-    private function _registerRoute(Kong $kong, Service $service): Route
+    private function _registerRoute(Kong $kong, Service $service): void
     {
         $route = new Route();
         $route->setName(config('kong.kong_route_name'));
         $route->setService($service);
         $route->setPaths(config('kong.kong_route_paths'));
 
-        return $kong->createOrUpdateRoute($route);
+        $kong->createOrUpdateRoute($route);
     }
 }
